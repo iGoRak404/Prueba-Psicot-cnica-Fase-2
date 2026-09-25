@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { Chart, registerables } from 'chart.js';
 import * as XLSX from 'xlsx';
+import { EmailSettings } from '../services/emailService';
 
 Chart.register(...registerables);
 
@@ -36,6 +37,8 @@ interface AdminPanelProps {
   attempts: Attempt[];
   adminEmail: string;
   onSaveAdminEmail: (email: string) => void;
+  emailSettings?: EmailSettings;
+  onSaveEmailSettings?: (settings: EmailSettings) => void;
   onSaveQuestion: (group: GroupLetter, difficulty: Difficulty, question: SenaQuestion) => void;
   onDeleteQuestion: (group: GroupLetter, difficulty: Difficulty, index: number) => void;
   onResetQuestions: () => void;
@@ -52,6 +55,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   attempts,
   adminEmail,
   onSaveAdminEmail,
+  emailSettings,
+  onSaveEmailSettings,
   onResetQuestions,
   onClearAllLocalData,
   onOpenReview,
@@ -74,6 +79,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   // Email config local state
   const [emailInput, setEmailInput] = useState(adminEmail);
+  const [emailJsServiceId, setEmailJsServiceId] = useState(emailSettings?.emailJsServiceId || '');
+  const [emailJsTemplateId, setEmailJsTemplateId] = useState(emailSettings?.emailJsTemplateId || '');
+  const [emailJsPublicKey, setEmailJsPublicKey] = useState(emailSettings?.emailJsPublicKey || '');
+  const [webhookUrl, setWebhookUrl] = useState(emailSettings?.webhookUrl || '');
 
   // Chart refs
   const scoresChartRef = useRef<HTMLCanvasElement | null>(null);
@@ -912,11 +921,115 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   return;
                 }
                 onSaveAdminEmail(emailInput.trim());
+                if (onSaveEmailSettings) {
+                  onSaveEmailSettings({
+                    adminEmail: emailInput.trim(),
+                    emailJsServiceId: emailJsServiceId.trim(),
+                    emailJsTemplateId: emailJsTemplateId.trim(),
+                    emailJsPublicKey: emailJsPublicKey.trim(),
+                    webhookUrl: webhookUrl.trim(),
+                  });
+                }
                 alert('✅ Correo de administrador guardado con éxito.');
               }}
               className="btn-primary-sena text-xs py-2 px-4"
             >
               Guardar Correo
+            </button>
+          </div>
+
+          {/* GitHub Pages & Email Integration (Zero Leaks) */}
+          <div className="p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-light)] space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <h3 className="font-bold text-sm" style={{ color: 'var(--text-heading)' }}>
+                Despacho de Correo para GitHub Pages
+              </h3>
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full badge-green">
+                🛡️ Cero Filtraciones de Claves
+              </span>
+            </div>
+
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              En <strong>GitHub Pages</strong> no hay servidor Node.js backend. La plataforma genera automáticamente los acuses de recibo y reportes HTML completos de forma local en el navegador del aprendiz.
+            </p>
+
+            <div className="p-3.5 rounded-xl border text-xs space-y-1.5" style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-light)' }}>
+              <div className="font-bold" style={{ color: 'var(--text-heading)' }}>
+                ¿Deseas despacho automático real por correo en GitHub Pages?
+              </div>
+              <p style={{ color: 'var(--text-muted)' }}>
+                Puedes conectar tu cuenta gratuita de <strong>EmailJS</strong>. EmailJS utiliza una <em>Public Key</em> diseñada expresamente para clientes web estáticos, por lo que <strong>nunca expone contraseñas SMTP ni secretos de servidor</strong> en GitHub.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <label className="block font-bold mb-1" style={{ color: 'var(--text-muted)' }}>EmailJS Service ID</label>
+                <input
+                  type="text"
+                  placeholder="service_xxxxx"
+                  value={emailJsServiceId}
+                  onChange={(e) => setEmailJsServiceId(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border outline-none focus:border-[#008f4c]"
+                  style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-main)' }}
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold mb-1" style={{ color: 'var(--text-muted)' }}>EmailJS Template ID</label>
+                <input
+                  type="text"
+                  placeholder="template_xxxxx"
+                  value={emailJsTemplateId}
+                  onChange={(e) => setEmailJsTemplateId(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border outline-none focus:border-[#008f4c]"
+                  style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-main)' }}
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block font-bold mb-1" style={{ color: 'var(--text-muted)' }}>EmailJS Public Key (Clave Pública)</label>
+                <input
+                  type="text"
+                  placeholder="user_xxxxx o Public Key de EmailJS"
+                  value={emailJsPublicKey}
+                  onChange={(e) => setEmailJsPublicKey(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border outline-none focus:border-[#008f4c]"
+                  style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-main)' }}
+                />
+                <span className="text-[11px] opacity-75 mt-1 block">Se guarda en el navegador local (localStorage), no en archivos del repositorio Git.</span>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block font-bold mb-1" style={{ color: 'var(--text-muted)' }}>Opcional: URL de Webhook Personalizado (Make / Zapier / Formspree)</label>
+                <input
+                  type="url"
+                  placeholder="https://hook.eu1.make.com/..."
+                  value={webhookUrl}
+                  onChange={(e) => setWebhookUrl(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border outline-none focus:border-[#008f4c]"
+                  style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-main)' }}
+                />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (onSaveEmailSettings) {
+                  onSaveEmailSettings({
+                    adminEmail: emailInput.trim(),
+                    emailJsServiceId: emailJsServiceId.trim(),
+                    emailJsTemplateId: emailJsTemplateId.trim(),
+                    emailJsPublicKey: emailJsPublicKey.trim(),
+                    webhookUrl: webhookUrl.trim(),
+                  });
+                  alert('✅ Parámetros de correo para GitHub Pages guardados exitosamente.');
+                }
+              }}
+              className="btn-primary-sena text-xs py-2 px-4"
+            >
+              Guardar Configuración de Correo
             </button>
           </div>
 

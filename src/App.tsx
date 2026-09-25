@@ -19,11 +19,13 @@ import { AdminPanel } from './components/AdminPanel';
 import { ReviewModal } from './components/ReviewModal';
 import { QuestionEditorModal } from './components/QuestionEditorModal';
 import { SuccessModal } from './components/SuccessModal';
+import { sendEvaluationEmail, EmailSettings } from './services/emailService';
 
 const STORAGE_KEY_THEME = 'sena_adso_theme';
 const STORAGE_KEY_QUESTIONS = 'sena_adso_questions_v4';
 const STORAGE_KEY_ATTEMPTS = 'sena_adso_attempts_v4';
 const STORAGE_KEY_ADMIN_EMAIL = 'sena_adso_admin_email';
+const STORAGE_KEY_EMAIL_SETTINGS = 'sena_adso_email_settings';
 
 export default function App() {
   // Theme state
@@ -35,6 +37,30 @@ export default function App() {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem(STORAGE_KEY_THEME, theme);
   }, [theme]);
+
+  // Email Settings (Zero-leak GitHub Pages ready)
+  const [emailSettings, setEmailSettings] = useState<EmailSettings>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_EMAIL_SETTINGS);
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // ignore
+    }
+    return {
+      adminEmail: localStorage.getItem(STORAGE_KEY_ADMIN_EMAIL) || 'admin@sena.edu.co',
+      emailJsServiceId: import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
+      emailJsTemplateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '',
+      emailJsPublicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '',
+      webhookUrl: import.meta.env.VITE_EMAIL_WEBHOOK_URL || '',
+    };
+  });
+
+  const handleSaveEmailSettings = (newSettings: EmailSettings) => {
+    setEmailSettings(newSettings);
+    setAdminEmail(newSettings.adminEmail);
+    localStorage.setItem(STORAGE_KEY_EMAIL_SETTINGS, JSON.stringify(newSettings));
+    localStorage.setItem(STORAGE_KEY_ADMIN_EMAIL, newSettings.adminEmail);
+  };
 
   // Questions Database
   const [questionsDB, setQuestionsDB] = useState<Record<GroupLetter, Record<Difficulty, SenaQuestion[]>>>(() => {
@@ -105,6 +131,10 @@ export default function App() {
     percentage: number;
     hasPending: boolean;
     email: string;
+    studentName?: string;
+    htmlReport?: string;
+    summaryText?: string;
+    deliveryMethod?: string;
   }>({
     isOpen: false,
     score: 0,
@@ -112,6 +142,10 @@ export default function App() {
     percentage: 0,
     hasPending: false,
     email: '',
+    studentName: '',
+    htmlReport: '',
+    summaryText: '',
+    deliveryMethod: '',
   });
 
   // Review Modal state
@@ -245,36 +279,45 @@ export default function App() {
     const updatedAttempts = [newAttempt, ...attempts];
     saveAttempts(updatedAttempts);
 
-    // Call /api/send-email initial dispatch
+    // Dispatch or Generate Email report (GitHub Pages and server compatible)
+    let emailHtml = '';
+    let emailText = '';
+    let deliveryMethod = 'client_generated';
+
     try {
-      const res = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const dispatchResult = await sendEvaluationEmail(
+        {
           emailType: 'initial',
           studentEmail: examStudent.email,
           studentName: examStudent.fullName,
           studentDoc: `${examStudent.docType} ${examStudent.docNumber}`,
           group: examGroup,
           difficulty: examDifficulty,
-          score: autoScore,
-          total: autoTotal,
+          autoScore,
+          autoTotal,
           hasPending,
           answers,
           questions: examQuestions,
+          gradedDetails,
           completedAt: newAttempt.date,
-          adminEmail,
-        }),
-      });
-      if (res.ok) {
+          adminEmail: emailSettings.adminEmail,
+        },
+        emailSettings
+      );
+
+      emailHtml = dispatchResult.studentHtml;
+      emailText = dispatchResult.studentText;
+      deliveryMethod = dispatchResult.method;
+
+      if (dispatchResult.success && dispatchResult.method !== 'client_generated') {
         newAttempt.emailSentInitial = true;
         saveAttempts(updatedAttempts);
       }
     } catch (err) {
-      console.warn('No se pudo despachar el correo inicial:', err);
+      console.warn('Dispatch note:', err);
     }
 
-    // Close exam & show success modal
+    // Close exam & show success modal with generated report
     setIsExamOpen(false);
     const pct = autoTotal > 0 ? Math.round((autoScore / autoTotal) * 100) : 0;
     setSuccessData({
@@ -284,6 +327,10 @@ export default function App() {
       percentage: pct,
       hasPending,
       email: examStudent.email,
+      studentName: examStudent.fullName,
+      htmlReport: emailHtml,
+      summaryText: emailText,
+      deliveryMethod,
     });
   };
 
@@ -346,15 +393,13 @@ export default function App() {
       return;
     }
 
-    if (!confirm(`¿Deseas enviar el correo con los resultados definitivos a ${target.student.fullName} (${target.student.email})?`)) {
+    if (!confirm(`¿Deseas procesar y enviar el correo con los resultados definitivos a ${target.student.fullName} (${target.student.email})?`)) {
       return;
     }
 
     try {
-      const res = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const dispatchResult = await sendEvaluationEmail(
+        {
           emailType: 'final',
           studentEmail: target.student.email,
           studentName: target.student.fullName,
@@ -369,25 +414,28 @@ export default function App() {
           questions: target.questions,
           answers: target.answers,
           completedAt: target.date,
-          adminEmail,
-        }),
-      });
+          adminEmail: emailSettings.adminEmail,
+        },
+        emailSettings
+      );
 
-      if (res.ok) {
-        const updated = attempts.map((a) =>
-          a.id === attemptId ? { ...a, emailSentFinal: true } : a
-        );
-        saveAttempts(updated);
-        if (reviewAttempt && reviewAttempt.id === attemptId) {
-          setReviewAttempt({ ...reviewAttempt, emailSentFinal: true });
-        }
-        alert(`✅ Correo definitivo enviado exitosamente a:\n\n📧 ${target.student.email}\n📧 ${adminEmail}`);
+      const updated = attempts.map((a) =>
+        a.id === attemptId ? { ...a, emailSentFinal: true } : a
+      );
+      saveAttempts(updated);
+      if (reviewAttempt && reviewAttempt.id === attemptId) {
+        setReviewAttempt({ ...reviewAttempt, emailSentFinal: true });
+      }
+
+      if (dispatchResult.method === 'emailjs') {
+        alert(`✅ Correo definitivo despachado vía EmailJS a:\n\n📧 ${target.student.email}\n📧 ${emailSettings.adminEmail}`);
+      } else if (dispatchResult.method === 'server') {
+        alert(`✅ Correo definitivo despachado vía servidor SMTP a:\n\n📧 ${target.student.email}\n📧 ${emailSettings.adminEmail}`);
       } else {
-        const errJson = await res.json().catch(() => ({}));
-        throw new Error(errJson.error || 'Falla en el servidor');
+        alert(`✅ Reporte oficial definitivo generado con éxito.\n\nPuedes descargarlo en HTML desde el botón "Descargar (.html)" o copiar el texto para el aprendiz.`);
       }
     } catch (err: any) {
-      alert(`❌ Error al enviar el correo definitivo: ${err.message}`);
+      alert(`❌ Error al procesar el correo definitivo: ${err.message}`);
     }
   };
 
@@ -460,6 +508,8 @@ export default function App() {
             attempts={attempts}
             adminEmail={adminEmail}
             onSaveAdminEmail={handleSaveAdminEmail}
+            emailSettings={emailSettings}
+            onSaveEmailSettings={handleSaveEmailSettings}
             onSaveQuestion={handleSaveQuestion}
             onDeleteQuestion={handleDeleteQuestion}
             onResetQuestions={handleResetQuestions}
@@ -526,6 +576,10 @@ export default function App() {
         percentage={successData.percentage}
         hasPending={successData.hasPending}
         email={successData.email}
+        studentName={successData.studentName}
+        htmlReport={successData.htmlReport}
+        summaryText={successData.summaryText}
+        deliveryMethod={successData.deliveryMethod}
         onClose={() => setSuccessData((prev) => ({ ...prev, isOpen: false }))}
       />
 

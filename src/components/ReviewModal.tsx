@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Attempt, SenaQuestion, SubjectiveReview } from '../types';
-import { UserCheck, CheckCircle2, XCircle, RotateCcw, MessageSquare, X, Mail } from 'lucide-react';
+import { UserCheck, CheckCircle2, XCircle, RotateCcw, MessageSquare, X, Mail, FileDown } from 'lucide-react';
+import { generateStudentFinalEmailHtml, downloadHtmlReport } from '../services/emailService';
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -297,13 +298,45 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
         {/* Footer Actions */}
         <div className="pt-5 border-t mt-5 flex items-center justify-between gap-3 flex-wrap" style={{ borderColor: 'var(--border-light)' }}>
-          <button
-            type="button"
-            onClick={onClose}
-            className="btn-secondary-sena"
-          >
-            Cerrar Ventana
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="btn-secondary-sena text-xs py-2 px-3.5"
+            >
+              Cerrar Ventana
+            </button>
+            {allReviewed && (
+              <button
+                type="button"
+                onClick={() => {
+                  const finalHtml = generateStudentFinalEmailHtml({
+                    emailType: 'final',
+                    studentEmail: attempt.student.email,
+                    studentName: attempt.student.fullName,
+                    studentDoc: `${attempt.student.docType} ${attempt.student.docNumber}`,
+                    group: attempt.group,
+                    difficulty: attempt.difficulty,
+                    finalScore: attempt.finalScore,
+                    finalTotal: attempt.finalTotal,
+                    autoScore: attempt.autoScore,
+                    autoTotal: attempt.autoTotal,
+                    questions: attempt.questions,
+                    answers: attempt.answers,
+                    reviews: attempt.reviews,
+                    completedAt: attempt.date,
+                  });
+                  const filename = `resultado_final_sena_${attempt.student.fullName.toLowerCase().replace(/\s+/g, '_')}.html`;
+                  downloadHtmlReport(filename, finalHtml);
+                }}
+                className="btn-secondary-sena text-xs py-2 px-3.5 flex items-center gap-1.5"
+                title="Descargar reporte oficial en formato HTML"
+              >
+                <FileDown className="w-3.5 h-3.5 text-[#008f4c]" />
+                <span>Descargar (.html)</span>
+              </button>
+            )}
+          </div>
 
           {allReviewed && (
             <button
@@ -312,7 +345,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
               className="btn-primary-sena text-xs sm:text-sm"
             >
               <Mail className="w-4 h-4" />
-              <span>Enviar Correo Definitivo al Aprendiz</span>
+              <span>Enviar / Despachar Correo Definitivo</span>
             </button>
           )}
         </div>
