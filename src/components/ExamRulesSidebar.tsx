@@ -72,7 +72,7 @@ export const ExamRulesSidebar: React.FC = () => {
         className="rounded-3xl p-6 border"
         style={{
           backgroundColor: 'var(--bg-rules)',
-          borderColor: 'var(--sena-yellow)',
+          borderColor: 'var(--border-light)',
         }}
       >
         <div className="flex items-center gap-2 mb-4">

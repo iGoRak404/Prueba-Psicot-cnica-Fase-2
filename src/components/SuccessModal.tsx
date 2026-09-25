@@ -48,11 +48,11 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
           <div className="text-4xl font-black text-[#008f4c] mb-1">
             {percentage}%
           </div>
-          <p className="text-xs font-bold text-gray-600 dark:text-gray-300">
+          <p className="text-xs font-bold" style={{ color: 'var(--text-muted)' }}>
             {score.toFixed(1)} de {total} puntos automáticos
           </p>
           {hasPending && (
-            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+            <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold badge-yellow">
               <Clock className="w-3.5 h-3.5" />
               <span>Sujeto a revisión manual de preguntas abiertas</span>
             </div>
@@ -69,7 +69,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
             Se ha remitido la confirmación con el análisis de respuestas a: <strong className="text-[var(--text-main)]">{email}</strong>.
           </p>
           {hasPending && (
-            <p className="text-amber-700 dark:text-amber-400 font-medium">
+            <p className="font-semibold text-xs" style={{ color: 'var(--sena-yellow)' }}>
               Cuando el evaluador califique tus respuestas de desarrollo, recibirás un segundo correo con el veredicto definitivo.
             </p>
           )}

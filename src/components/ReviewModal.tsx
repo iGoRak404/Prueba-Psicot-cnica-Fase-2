@@ -124,12 +124,12 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
           {/* Subjective Questions List */}
           {subjectiveQuestions.length === 0 ? (
-            <div className="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 text-sm text-center font-medium">
+            <div className="p-6 rounded-2xl badge-green text-sm text-center font-medium">
               Este intento no contiene preguntas subjetivas de respuesta abierta o escala. Todo el examen fue calificado de forma 100% automática.
             </div>
           ) : (
             <div className="space-y-5">
-              <h4 className="text-sm font-bold uppercase tracking-wider text-gray-500">
+              <h4 className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                 Preguntas a calificar ({subjectiveQuestions.length})
               </h4>
 
@@ -147,20 +147,23 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                       backgroundColor: 'var(--bg-card)',
                       borderColor:
                         review.status === 'correct'
-                          ? '#008f4c'
+                          ? 'var(--sena-green)'
                           : review.status === 'incorrect'
-                          ? '#d14545'
+                          ? 'var(--sena-red)'
                           : review.status === 'partial'
-                          ? '#f7e6b0'
+                          ? 'var(--sena-yellow)'
                           : 'var(--border-light)',
                     }}
                   >
                     <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
                       <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-gray-100 dark:bg-gray-800">
+                        <span
+                          className="px-2.5 py-0.5 rounded-full text-xs font-extrabold"
+                          style={{ backgroundColor: 'var(--bg-panel)', color: 'var(--text-main)', border: '1px solid var(--border-light)' }}
+                        >
                           #{qNum}
                         </span>
-                        <span className="text-xs font-bold text-gray-500 uppercase">
+                        <span className="text-xs font-bold uppercase" style={{ color: 'var(--text-muted)' }}>
                           {q.type === 'scale' ? 'Escala 1-10' : 'Respuesta Abierta'} · Valor: {q.score} pt{q.score > 1 ? 's' : ''}
                         </span>
                       </div>
@@ -169,10 +172,10 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                         <span
                           className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
                             review.status === 'correct'
-                              ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                              ? 'badge-green'
                               : review.status === 'incorrect'
-                              ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300'
-                              : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                              ? 'badge-red'
+                              : 'badge-yellow'
                           }`}
                         >
                           Calificación: {earned} / {q.score} pts
@@ -185,8 +188,15 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                     </h5>
 
                     {/* Student response */}
-                    <div className="p-3.5 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-xs sm:text-sm mb-4">
-                      <span className="font-bold text-gray-500 block mb-1">Respuesta del aprendiz:</span>
+                    <div
+                      className="p-3.5 rounded-xl border text-xs sm:text-sm mb-4"
+                      style={{
+                        backgroundColor: 'var(--bg-panel)',
+                        borderColor: 'var(--border-light)',
+                        color: 'var(--text-main)',
+                      }}
+                    >
+                      <span className="font-bold block mb-1" style={{ color: 'var(--text-muted)' }}>Respuesta del aprendiz:</span>
                       <p className="font-medium whitespace-pre-wrap">
                         {q.type === 'scale'
                           ? `Valoración seleccionada: ${answer ?? 'Sin responder'}/10`
@@ -202,7 +212,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                         className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                           review.status === 'correct'
                             ? 'bg-[#008f4c] text-white shadow-xs'
-                            : 'border border-emerald-300 text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950'
+                            : 'border border-emerald-400 text-emerald-700 dark:text-emerald-300 hover:bg-[#008f4c]/10'
                         }`}
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
@@ -215,7 +225,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                         className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                           review.status === 'incorrect'
                             ? 'bg-red-600 text-white shadow-xs'
-                            : 'border border-red-300 text-red-700 hover:bg-red-50 dark:hover:bg-red-950'
+                            : 'border border-red-400 text-red-700 dark:text-red-300 hover:bg-red-500/10'
                         }`}
                       >
                         <XCircle className="w-3.5 h-3.5" />
@@ -232,7 +242,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                           className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                             review.status === 'partial'
                               ? 'bg-amber-500 text-white shadow-xs'
-                              : 'border border-amber-300 text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950'
+                              : 'border border-amber-400 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10'
                           }`}
                         >
                           <RotateCcw className="w-3.5 h-3.5" />

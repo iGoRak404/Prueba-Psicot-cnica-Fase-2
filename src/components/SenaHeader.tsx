@@ -53,9 +53,10 @@ export const SenaHeader: React.FC<SenaHeaderProps> = ({
             onClick={() => onThemeChange('normal')}
             className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer ${
               currentTheme === 'normal'
-                ? 'bg-[#008f4c] text-white shadow-xs'
-                : 'text-gray-500 hover:opacity-80'
+                ? 'bg-[#008f4c] text-white shadow-xs font-bold'
+                : 'hover:opacity-80'
             }`}
+            style={{ color: currentTheme === 'normal' ? '#ffffff' : 'var(--text-muted)' }}
             title="Tema Verde SENA"
           >
             <Sun className="w-4 h-4" />
@@ -65,9 +66,10 @@ export const SenaHeader: React.FC<SenaHeaderProps> = ({
             onClick={() => onThemeChange('beige')}
             className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer ${
               currentTheme === 'beige'
-                ? 'bg-[#2d7a4a] text-white shadow-xs'
-                : 'text-gray-500 hover:opacity-80'
+                ? 'bg-[#2d7a4a] text-white shadow-xs font-bold'
+                : 'hover:opacity-80'
             }`}
+            style={{ color: currentTheme === 'beige' ? '#ffffff' : 'var(--text-muted)' }}
             title="Tema Beige Cálido"
           >
             <Coffee className="w-4 h-4" />
@@ -77,9 +79,10 @@ export const SenaHeader: React.FC<SenaHeaderProps> = ({
             onClick={() => onThemeChange('dark')}
             className={`w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer ${
               currentTheme === 'dark'
-                ? 'bg-[#2ea043] text-white shadow-xs'
-                : 'text-gray-500 hover:opacity-80'
+                ? 'bg-[#39a900] text-white shadow-xs font-bold'
+                : 'hover:opacity-80'
             }`}
+            style={{ color: currentTheme === 'dark' ? '#ffffff' : 'var(--text-muted)' }}
             title="Tema Oscuro"
           >
             <Moon className="w-4 h-4" />

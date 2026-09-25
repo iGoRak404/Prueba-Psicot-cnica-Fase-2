@@ -67,7 +67,7 @@ export const StudentRegistrationForm: React.FC<StudentRegistrationFormProps> = (
     <div className="card-sena">
       <div className="flex items-center justify-between mb-2">
         <span className="label-tag">Registro del Aprendiz</span>
-        <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full badge-green">
           Oficial SENA
         </span>
       </div>
@@ -80,9 +80,9 @@ export const StudentRegistrationForm: React.FC<StudentRegistrationFormProps> = (
       </p>
 
       {errorMsg && (
-        <div className="p-3.5 mb-5 rounded-2xl bg-red-50 border-l-4 border-red-500 text-red-700 dark:bg-red-950/40 dark:text-red-300 text-sm flex items-start gap-2.5">
+        <div className="p-3.5 mb-5 rounded-2xl badge-red border border-red-300 text-sm flex items-start gap-2.5">
           <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-red-500" />
-          <span>{errorMsg}</span>
+          <span className="font-semibold">{errorMsg}</span>
         </div>
       )}
 

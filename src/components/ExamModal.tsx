@@ -183,7 +183,10 @@ export const ExamModal: React.FC<ExamModalProps> = ({
 
     if (media.type === 'image') {
       return (
-        <div className="my-4 p-3 rounded-2xl border bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-center">
+        <div
+          className="my-4 p-3 rounded-2xl border text-center"
+          style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-light)' }}
+        >
           <img src={url} alt="Pregunta" className="max-h-72 mx-auto rounded-xl object-contain" />
         </div>
       );
@@ -194,7 +197,10 @@ export const ExamModal: React.FC<ExamModalProps> = ({
         if (url.includes('youtu.be/')) vidId = url.split('youtu.be/')[1].split('?')[0];
         else if (url.includes('v=')) vidId = url.split('v=')[1].split('&')[0];
         return (
-          <div className="my-4 aspect-video rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800">
+          <div
+            className="my-4 aspect-video rounded-2xl overflow-hidden border"
+            style={{ borderColor: 'var(--border-light)' }}
+          >
             <iframe
               src={`https://www.youtube.com/embed/${vidId}`}
               title="Video complementario"
@@ -205,14 +211,20 @@ export const ExamModal: React.FC<ExamModalProps> = ({
         );
       }
       return (
-        <div className="my-4 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800">
+        <div
+          className="my-4 rounded-2xl overflow-hidden border"
+          style={{ borderColor: 'var(--border-light)' }}
+        >
           <video controls src={url} className="w-full max-h-72 object-contain" />
         </div>
       );
     }
     if (media.type === 'audio') {
       return (
-        <div className="my-4 p-4 rounded-2xl border bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 flex items-center gap-3">
+        <div
+          className="my-4 p-4 rounded-2xl border flex items-center gap-3"
+          style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-light)' }}
+        >
           <Volume2 className="w-6 h-6 text-[#008f4c]" />
           <audio controls src={url} className="w-full" />
         </div>
@@ -225,7 +237,11 @@ export const ExamModal: React.FC<ExamModalProps> = ({
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs bg-[#e4f3eb] text-[#008f4c] dark:bg-emerald-950 dark:text-emerald-300"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs"
+            style={{
+              backgroundColor: 'var(--sena-light-green)',
+              color: 'var(--sena-dark-green)',
+            }}
           >
             <FileText className="w-4 h-4" />
             <span>Ver documento PDF adjunto</span>
@@ -240,7 +256,11 @@ export const ExamModal: React.FC<ExamModalProps> = ({
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs bg-[#e4f3eb] text-[#008f4c] dark:bg-emerald-950 dark:text-emerald-300"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs"
+            style={{
+              backgroundColor: 'var(--sena-light-green)',
+              color: 'var(--sena-dark-green)',
+            }}
           >
             <ExternalLink className="w-4 h-4" />
             <span>{url}</span>
@@ -272,11 +292,11 @@ export const ExamModal: React.FC<ExamModalProps> = ({
               const isCurrent = idx === currentIndex;
               const isAnswered = isQuestionAnswered(q);
 
-              let itemClass = 'bg-[var(--bg-main)] text-[var(--text-muted)] border-transparent';
+              let itemClass = '';
               if (isCurrent) {
-                itemClass = 'bg-[#008f4c] text-white border-[#006b3a] scale-105 shadow-md shadow-[#008f4c]/30 font-black';
+                itemClass = 'current';
               } else if (isAnswered) {
-                itemClass = 'bg-[var(--sena-light-green)] text-[var(--sena-dark-green)] border-[#008f4c]/50 font-bold';
+                itemClass = 'answered';
               }
 
               return (
@@ -284,7 +304,7 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                   key={q.id}
                   type="button"
                   onClick={() => setCurrentIndex(idx)}
-                  className={`aspect-square rounded-xl flex items-center justify-center text-sm border-2 transition-all cursor-pointer hover:border-[#008f4c] ${itemClass}`}
+                  className={`q-nav-item ${itemClass}`}
                 >
                   {idx + 1}
                 </button>
@@ -298,7 +318,7 @@ export const ExamModal: React.FC<ExamModalProps> = ({
               <span>Progreso</span>
               <span>{Math.round(progressPct)}%</span>
             </div>
-            <div className="w-full h-2 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-800">
+            <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--border-light)' }}>
               <div
                 className="h-full bg-[#008f4c] transition-all duration-300"
                 style={{ width: `${progressPct}%` }}
@@ -353,7 +373,7 @@ export const ExamModal: React.FC<ExamModalProps> = ({
           </div>
 
           {/* Under-header mini progress line */}
-          <div className="h-1.5 w-full bg-[#e4f3eb] dark:bg-emerald-950">
+          <div className="h-1.5 w-full" style={{ backgroundColor: 'var(--border-light)' }}>
             <div
               className="h-full bg-gradient-to-r from-[#008f4c] to-[#4caf7a] transition-all duration-300"
               style={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
@@ -409,11 +429,7 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                       <label
                         key={oIdx}
                         onClick={() => handleSelectRadio(currentQ.id, oIdx)}
-                        className={`flex items-center gap-3.5 p-4 rounded-2xl border-2 transition-all cursor-pointer ${
-                          selected
-                            ? 'border-[#008f4c] bg-[#e4f3eb] dark:bg-emerald-950/40 shadow-sm'
-                            : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-[#008f4c]'
-                        }`}
+                        className={`exam-option ${selected ? 'selected' : ''}`}
                       >
                         <input
                           type="radio"
@@ -422,14 +438,10 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                           onChange={() => handleSelectRadio(currentQ.id, oIdx)}
                           className="w-5 h-5 accent-[#008f4c] shrink-0"
                         />
-                        <span
-                          className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 text-white ${
-                            selected ? 'bg-[#006b3a]' : 'bg-[#008f4c]'
-                          }`}
-                        >
+                        <span className="option-letter">
                           {String.fromCharCode(65 + oIdx)}
                         </span>
-                        <span className="text-sm sm:text-base font-medium">{opt}</span>
+                        <span className="text-sm sm:text-base font-semibold leading-relaxed">{opt}</span>
                       </label>
                     );
                   })}
@@ -453,11 +465,7 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                           e.preventDefault();
                           handleToggleCheckbox(currentQ.id, oIdx);
                         }}
-                        className={`flex items-center gap-3.5 p-4 rounded-2xl border-2 transition-all cursor-pointer ${
-                          isSelected
-                            ? 'border-[#008f4c] bg-[#e4f3eb] dark:bg-emerald-950/40 shadow-sm'
-                            : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-[#008f4c]'
-                        }`}
+                        className={`exam-option ${isSelected ? 'selected' : ''}`}
                       >
                         <input
                           type="checkbox"
@@ -465,14 +473,10 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                           readOnly
                           className="w-5 h-5 accent-[#008f4c] shrink-0"
                         />
-                        <span
-                          className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 text-white ${
-                            isSelected ? 'bg-[#006b3a]' : 'bg-[#008f4c]'
-                          }`}
-                        >
+                        <span className="option-letter">
                           {String.fromCharCode(65 + oIdx)}
                         </span>
-                        <span className="text-sm sm:text-base font-medium">{opt}</span>
+                        <span className="text-sm sm:text-base font-semibold leading-relaxed">{opt}</span>
                       </label>
                     );
                   })}
@@ -485,11 +489,7 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                   <button
                     type="button"
                     onClick={() => handleSelectTrueFalse(currentQ.id, true)}
-                    className={`p-6 sm:p-8 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center justify-center gap-3 font-extrabold text-lg sm:text-xl ${
-                      answers[currentQ.id] === true
-                        ? 'border-[#008f4c] bg-[#e4f3eb] text-[#006b3a] dark:bg-emerald-950 dark:text-emerald-300 shadow-md'
-                        : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-[#008f4c]'
-                    }`}
+                    className={`exam-vf-btn ${answers[currentQ.id] === true ? 'selected-true' : ''}`}
                   >
                     <CheckCircle className="w-10 h-10 text-[#008f4c]" />
                     <span>Verdadero</span>
@@ -498,11 +498,7 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                   <button
                     type="button"
                     onClick={() => handleSelectTrueFalse(currentQ.id, false)}
-                    className={`p-6 sm:p-8 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center justify-center gap-3 font-extrabold text-lg sm:text-xl ${
-                      answers[currentQ.id] === false
-                        ? 'border-red-500 bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300 shadow-md'
-                        : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-red-500'
-                    }`}
+                    className={`exam-vf-btn ${answers[currentQ.id] === false ? 'selected-false' : ''}`}
                   >
                     <XCircle className="w-10 h-10 text-red-500" />
                     <span>Falso</span>
@@ -519,10 +515,15 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                     placeholder="Escribe el valor numérico..."
                     value={answers[currentQ.id] ?? ''}
                     onChange={(e) => handleInputNumeric(currentQ.id, e.target.value)}
-                    className="w-full p-4 rounded-2xl border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-center text-3xl font-black outline-none focus:border-[#008f4c] transition-all"
+                    className="w-full p-4 rounded-2xl border-2 text-center text-3xl font-black outline-none focus:border-[#008f4c] transition-all"
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      borderColor: 'var(--border-light)',
+                      color: 'var(--text-heading)',
+                    }}
                   />
                   {currentQ.tolerance !== undefined && currentQ.tolerance > 0 && (
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                       Tolerancia permitida: ±{currentQ.tolerance}
                     </p>
                   )}
@@ -543,7 +544,7 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                     return (
                       <div
                         key={pIdx}
-                        className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center p-3.5 rounded-2xl border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
+                        className="exam-match-row"
                       >
                         <div className="font-bold text-sm sm:text-base px-2">{p.a}</div>
                         <select
@@ -571,7 +572,14 @@ export const ExamModal: React.FC<ExamModalProps> = ({
 
               {/* 6. Scale (1-10) */}
               {currentQ.type === 'scale' && (
-                <div className="max-w-lg mx-auto p-6 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-center space-y-4">
+                <div
+                  className="max-w-lg mx-auto p-6 rounded-2xl border text-center space-y-4"
+                  style={{
+                    backgroundColor: 'var(--bg-card)',
+                    borderColor: 'var(--border-light)',
+                    color: 'var(--text-main)',
+                  }}
+                >
                   <div className="text-5xl font-black text-[#008f4c]">
                     {answers[currentQ.id] ?? 5}
                   </div>
@@ -602,7 +610,12 @@ export const ExamModal: React.FC<ExamModalProps> = ({
                     placeholder="Redacta detalladamente tu respuesta técnica aquí..."
                     value={answers[currentQ.id] ?? ''}
                     onChange={(e) => handleTextChange(currentQ.id, e.target.value)}
-                    className="w-full p-4 rounded-2xl border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-sm sm:text-base font-medium outline-none focus:border-[#008f4c] transition-all resize-y"
+                    className="w-full p-4 rounded-2xl border-2 text-sm sm:text-base font-medium outline-none focus:border-[#008f4c] transition-all resize-y"
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      borderColor: 'var(--border-light)',
+                      color: 'var(--text-main)',
+                    }}
                   />
                   <p className="text-xs font-semibold text-amber-600 dark:text-amber-400">
                     ⏳ Esta pregunta abierta será revisada por el administrador para asignar el puntaje final y retroalimentación.

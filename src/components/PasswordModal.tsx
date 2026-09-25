@@ -85,7 +85,7 @@ export const PasswordModal: React.FC<PasswordModalProps> = ({
           </div>
 
           {error && (
-            <div className="p-3 rounded-xl bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300 text-xs font-semibold flex items-center gap-2">
+            <div className="p-3 rounded-xl badge-red text-xs font-semibold flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
               <span>Contraseña incorrecta. Por favor intenta de nuevo.</span>
             </div>

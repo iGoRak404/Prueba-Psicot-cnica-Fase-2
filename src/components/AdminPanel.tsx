@@ -561,7 +561,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <span>Almacenamiento local utilizado (Base64)</span>
               <span>{storageText}</span>
             </div>
-            <div className="w-full h-2 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-800">
+            <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--border-light)' }}>
               <div
                 className={`h-full transition-all duration-300 ${
                   storagePct > 80 ? 'bg-red-500' : storagePct > 60 ? 'bg-amber-500' : 'bg-[#008f4c]'
@@ -574,7 +574,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           {/* Question List */}
           <div className="space-y-3">
             {currentQuestions.length === 0 ? (
-              <div className="p-8 text-center text-sm font-medium text-gray-400 bg-gray-50 dark:bg-gray-900 rounded-3xl border border-dashed border-gray-300 dark:border-gray-800">
+              <div
+                className="p-8 text-center text-sm font-medium rounded-3xl border border-dashed"
+                style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border)', color: 'var(--text-muted)' }}
+              >
                 No hay preguntas configuradas para este grupo y dificultad. Haz clic en "Nueva Pregunta" o en "Restaurar".
               </div>
             ) : (
@@ -589,7 +592,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 >
                   <div className="space-y-2 flex-1">
                     <div className="flex items-start gap-2">
-                      <span className="w-6 h-6 rounded-lg bg-gray-100 dark:bg-gray-800 text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
+                      <span
+                        className="w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 border"
+                        style={{ backgroundColor: 'var(--bg-panel)', color: 'var(--text-muted)', borderColor: 'var(--border-light)' }}
+                      >
                         {idx + 1}
                       </span>
                       <p className="font-bold text-sm sm:text-base leading-snug" style={{ color: 'var(--text-heading)' }}>
@@ -781,7 +787,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         <td className="p-3.5 font-bold">
                           <div>{a.student.fullName}</div>
                           {a.emailSentFinal && (
-                            <span className="inline-block mt-0.5 px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                            <span className="inline-block mt-0.5 px-2 py-0.2 rounded-full text-[10px] font-bold badge-green">
                               📧 Correo enviado
                             </span>
                           )}
@@ -926,7 +932,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             <button
               type="button"
               onClick={onClearAllLocalData}
-              className="px-4 py-2 rounded-full font-bold text-xs text-red-600 border border-red-300 hover:bg-red-50 dark:hover:bg-red-950 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-full font-bold text-xs badge-red border border-red-300 dark:border-red-800 hover:opacity-85 transition-opacity cursor-pointer"
             >
               Borrar todos los datos locales
             </button>

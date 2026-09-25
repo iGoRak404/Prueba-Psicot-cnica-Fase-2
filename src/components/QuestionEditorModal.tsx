@@ -205,8 +205,8 @@ export const QuestionEditorModal: React.FC<QuestionEditorModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-9 h-9 rounded-full flex items-center justify-center border hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-            style={{ borderColor: 'var(--border)' }}
+            className="w-9 h-9 rounded-full flex items-center justify-center border hover:opacity-80 transition-colors cursor-pointer"
+            style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-panel)' }}
           >
             <X className="w-5 h-5 text-gray-500" />
           </button>
@@ -485,7 +485,10 @@ export const QuestionEditorModal: React.FC<QuestionEditorModalProps> = ({
             </div>
 
             {media && (
-              <div className="mt-3 p-3 rounded-xl bg-white dark:bg-gray-900 border text-xs flex items-center gap-2">
+              <div
+                className="mt-3 p-3 rounded-xl border text-xs flex items-center gap-2"
+                style={{ backgroundColor: 'var(--bg-panel)', borderColor: 'var(--border-light)' }}
+              >
                 <span className="font-bold text-[#008f4c] uppercase">[{media.type}]</span>
                 <span className="truncate">{media.name || media.url || 'Archivo Base64 cargado'}</span>
               </div>
