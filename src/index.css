@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+:root, body[data-theme="normal"] {
+  --bg-main: #f0f5f9;
+  --bg-card: #ffffff;
+  --bg-panel: #f9fcff;
+  --bg-info: #f9fcff;
+  --bg-rules: #fefcf3;
+  --text-main: #1e3b2b;
+  --text-heading: #0b2d1f;
+  --text-muted: #59748c;
+  --border: #d0dfe8;
+  --border-light: #e2edf5;
+  --sena-green: #008f4c;
+  --sena-dark-green: #006b3a;
+  --sena-light-green: #e4f3eb;
+  --sena-yellow: #f7e6b0;
+  --sena-red: #d14545;
+  --accent: #008f4c;
+  --input-bg: #ffffff;
+  --input-border: #cfdfe9;
+  --q-bg-1: #fdf9f0;
+  --q-bg-2: #f5ebdc;
+  --q-bg-3: #e8f3ec;
+  --q-bg-4: #fdf5e6;
+  --q-bg-5: #eaf4fb;
+}
+
+body[data-theme="beige"] {
+  --bg-main: #f5ede0;
+  --bg-card: #fdf8f0;
+  --bg-panel: #fbf3e6;
+  --bg-info: #fbf3e6;
+  --bg-rules: #faf0dc;
+  --text-main: #4a3a2a;
+  --text-heading: #2e2418;
+  --text-muted: #8b7355;
+  --border: #e0d0b8;
+  --border-light: #ecdec8;
+  --sena-green: #2d7a4a;
+  --sena-dark-green: #1f5a35;
+  --sena-light-green: #e8f0e0;
+  --sena-yellow: #f0dba0;
+  --sena-red: #b84a4a;
+  --accent: #c98b3a;
+  --input-bg: #fffcf5;
+  --input-border: #dcc8a8;
+  --q-bg-1: #fbf3e4;
+  --q-bg-2: #f5e6ce;
+  --q-bg-3: #ebe8d4;
+  --q-bg-4: #f8ecd4;
+  --q-bg-5: #ece4d0;
+}
+
+body[data-theme="dark"] {
+  --bg-main: #0d1117;
+  --bg-card: #161b22;
+  --bg-panel: #1c2128;
+  --bg-info: #1c2128;
+  --bg-rules: #1f1a12;
+  --text-main: #c9d1d9;
+  --text-heading: #f0f6fc;
+  --text-muted: #8b949e;
+  --border: #30363d;
+  --border-light: #21262d;
+  --sena-green: #2ea043;
+  --sena-dark-green: #238636;
+  --sena-light-green: #1a3a24;
+  --sena-yellow: #4a3d1a;
+  --sena-red: #f85149;
+  --accent: #58a6ff;
+  --input-bg: #0d1117;
+  --input-border: #30363d;
+  --q-bg-1: #161b22;
+  --q-bg-2: #1a2029;
+  --q-bg-3: #14201a;
+  --q-bg-4: #1f1a12;
+  --q-bg-5: #121a26;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+/* Base custom classes matching user template */
+.card-sena {
+  background: var(--bg-card);
+  border-radius: 28px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 20, 10, 0.04);
+  border: 1px solid var(--border-light);
+  transition: 0.3s;
+}
+
+.label-tag {
+  display: inline-block;
+  background: var(--sena-light-green);
+  color: var(--sena-dark-green);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.25rem 0.8rem;
+  border-radius: 100px;
+}
+body[data-theme="dark"] .label-tag {
+  color: #7ee2a8;
+}
+
+.badge-green {
+  background: var(--sena-light-green);
+  color: var(--sena-dark-green);
+}
+body[data-theme="dark"] .badge-green {
+  color: #7ee2a8;
+}
+
+.badge-yellow {
+  background: #fef3cd;
+  color: #8a6d00;
+}
+body[data-theme="dark"] .badge-yellow {
+  background: #4a3d1a;
+  color: #f7d774;
+}
+
+.badge-red {
+  background: #fde8e8;
+  color: #b33a3a;
+}
+body[data-theme="dark"] .badge-red {
+  background: #3a1a1a;
+  color: #ff8b8b;
+}
+
+.badge-blue {
+  background: #e0eefb;
+  color: #1e5a8a;
+}
+body[data-theme="dark"] .badge-blue {
+  background: #1a2a3a;
+  color: #7ec0f0;
+}
+
+.badge-purple {
+  background: #ece4fb;
+  color: #5a3a9e;
+}
+body[data-theme="dark"] .badge-purple {
+  background: #2a1a3a;
+  color: #c4a7f0;
+}
+
+.btn-primary-sena {
+  background: var(--sena-green);
+  border: 1px solid var(--sena-green);
+  border-radius: 100px;
+  padding: 0.9rem 1.8rem;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-primary-sena:hover:not(:disabled) {
+  background: var(--sena-dark-green);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 143, 76, 0.15);
+}
+.btn-primary-sena:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary-sena {
+  background: var(--bg-card);
+  border: 1px solid var(--input-border);
+  border-radius: 100px;
+  padding: 0.7rem 1.4rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.88rem;
+}
+.btn-secondary-sena:hover:not(:disabled) {
+  border-color: var(--sena-green);
+  color: var(--sena-green);
+}
+.btn-secondary-sena:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Exam dynamic tints */
+.exam-tint-0 { background-color: var(--q-bg-1); }
+.exam-tint-1 { background-color: var(--q-bg-2); }
+.exam-tint-2 { background-color: var(--q-bg-3); }
+.exam-tint-3 { background-color: var(--q-bg-4); }
+.exam-tint-4 { background-color: var(--q-bg-5); }

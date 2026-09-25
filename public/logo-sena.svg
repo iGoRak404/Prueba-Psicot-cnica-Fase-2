@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <!-- SENA Emblem Green #008f4c -->
+  <g fill="#008f4c">
+    <!-- Circular Head -->
+    <circle cx="250" cy="85" r="45" />
+    
+    <!-- Bold SENA letters stylised -->
+    <text x="250" y="210" font-family="'Arial Black', 'Impact', sans-serif" font-weight="900" font-size="70" text-anchor="middle" letter-spacing="2">SENA</text>
+    
+    <!-- Torso and horizontal bar -->
+    <path d="M 60 225 L 440 225 L 440 255 L 320 255 L 420 440 L 330 440 L 250 290 L 170 440 L 80 440 L 180 255 L 60 255 Z" />
+    <!-- Inner chevron legs accent -->
+    <path d="M 250 340 L 295 440 L 205 440 Z" fill="#ffffff" />
+  </g>
+</svg>

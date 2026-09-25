@@ -1,0 +1,6 @@
+{
+  "name": "Sistema de Pruebas Psicotécnicas",
+  "description": "Sistema de alto rendimiento para gestión, ejecución y calificación en dos fases de pruebas psicotécnicas con control anti-cheat, temporizador con auto-submit y SQLite backend.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
